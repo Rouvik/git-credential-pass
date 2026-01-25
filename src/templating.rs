@@ -1,6 +1,6 @@
-use log::*;
-use std::collections::HashMap;
 use thiserror::Error;
+
+use crate::paramparsing::Params;
 
 #[derive(Debug, Clone)]
 pub enum Token {
@@ -65,7 +65,7 @@ pub fn parse(str: &str) -> Result<SyntaxTree, TemplatingError> {
     Ok(output)
 }
 
-pub fn populate(template: &SyntaxTree, params: &HashMap<String, String>) -> String {
+pub fn populate(template: &SyntaxTree, params: &Params) -> String {
     let mut output = String::with_capacity(template.len());
 
     for token in template.iter() {
@@ -78,11 +78,8 @@ pub fn populate(template: &SyntaxTree, params: &HashMap<String, String>) -> Stri
     output
 }
 
-pub fn get_params(
-    template: &SyntaxTree,
-    input: &str,
-) -> Result<HashMap<String, String>, TemplatingError> {
-    let mut output = HashMap::new();
+pub fn get_params(template: &SyntaxTree, input: &str) -> Result<Params, TemplatingError> {
+    let mut output = Params::new();
 
     let mut iter = input.chars();
     let mut template_iter = template.iter();
@@ -130,7 +127,7 @@ fn solve_capture(
     capture_name: &str,
     end_character: Option<char>,
     iter: &mut impl Iterator<Item = char>,
-    output: &mut HashMap<String, String>,
+    output: &mut Params,
 ) {
     let mut captured = String::new();
     loop {

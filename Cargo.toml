@@ -3,7 +3,7 @@ name = "git-credential-pass"
 description="A simple git credentials helper for pass"
 authors=["ldev <ldev dot eu dot org>"]
 version = "1.2.0"
-edition = "2021"
+edition = "2024"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
@@ -11,5 +11,5 @@ edition = "2021"
 clap = { version = "4.4.7", features = ["derive"] }
 log = "0.4.20"
 shellexpand = "3.1.0"
-stderrlog = "0.5.4"
-thiserror = "1.0.50"
+stderrlog = "0.6.0"
+thiserror = "2.0.18"

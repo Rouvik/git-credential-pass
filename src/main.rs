@@ -1,10 +1,10 @@
 use clap::{Parser, Subcommand};
 use log::*;
-use std::{collections::HashMap, fs};
+use std::fs;
 use templating::SyntaxTree;
 use utils::*;
 
-use crate::pass::PassError;
+use crate::{paramparsing::Params, pass::PassError};
 
 mod paramparsing;
 mod pass;
@@ -56,7 +56,7 @@ fn main() {
         .init()
         .unwrap();
 
-    let params = paramparsing::parse_from_stdin();
+    let params = Params::from_stdin();
 
     debug!("params={:?}", &params);
 
@@ -101,15 +101,15 @@ fn main() {
 fn get(cli: Cli, pass_name: &str, template: SyntaxTree) -> Result<(), PassError> {
     let pass_output = pass::get_password(&pass_name, cli.retries)?;
     let output = templating::get_params(&template, &pass_output).unwrap();
-
-    Ok(paramparsing::write_to_stdout(output))
+    output.write_to_stdout().expect("Failed to write to stdout");
+    Ok(())
 }
 
 fn store(
     cli: Cli,
     pass_name: &str,
     template: SyntaxTree,
-    params: &HashMap<String, String>,
+    params: &Params,
 ) -> Result<(), PassError> {
     let template_resolved = templating::populate(&template, &params);
 
